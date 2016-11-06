@@ -13,15 +13,15 @@ learnjs.problems = [
   },
   {
     description: "Start of an Array",
-    code: "function problem() { list = [42, 23, 10]; return __ === 42; }"
+    code: "function problem() { var list = [42, 23, 10]; return __ === 42; }"
   },
   {
     description: "Accessing Attributues",
-    code: 'function problem() { p = {name: "Ken"}; return __ == "Ken"; }'
+    code: 'function problem() { var p = {name: "Ken"}; return __ == "Ken"; }'
   },
   {
     description: "Increment Variable",
-    code: 'function problem() { a = 41; return (++a == __);}'
+    code: 'function problem() { var a = 41; return (++a == __);}'
   }
 ];
 
@@ -34,8 +34,26 @@ learnjs.applyObject = function(obj, elem) {
 learnjs.problemView = function(data) {
   var number = parseInt(data, 10);
   var view = $('.templates .problem-view').clone();
+  var problem = learnjs.problems[number -1];
+  var result = view.find('.result');
+
+  function checkAnswer() {
+    var answer = view.find('.answer').val();
+    var test = problem.code.replace('__', answer) + '; problem();';
+    return eval(test);
+  }
+
+  function handleSubmit() {
+    if (checkAnswer()) {
+      result.text('Correct!');
+    } else {
+      result.text('Incorrect!');
+    }
+  }
+
+  view.find('.check-btn').click(handleSubmit);
   view.find('.title').text('Problem #' + number);
-  learnjs.applyObject(learnjs.problems[number -1], view);
+  learnjs.applyObject(problem, view);
   return view;
 }
 
