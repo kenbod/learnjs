@@ -38,6 +38,22 @@ learnjs.applyObject = function(obj, elem) {
   }
 };
 
+learnjs.template = function(name) {
+  return $('.templates .' + name).clone();
+}
+
+learnjs.buildCorrectFlash = function(number) {
+  var correctFlash = learnjs.template('correct-flash');
+  var link = correctFlash.find('a');
+  if (number < learnjs.problems.length) {
+    link.attr('href', '#problem-' + (number + 1));
+  } else {
+    link.attr('href', '');
+    link.text("You're Finished!");
+  }
+  return correctFlash;
+}
+
 learnjs.problemView = function(data) {
   var number = parseInt(data, 10);
   var view = $('.templates .problem-view').clone();
@@ -52,7 +68,8 @@ learnjs.problemView = function(data) {
 
   function handleSubmit() {
     if (checkAnswer()) {
-      learnjs.flashElement(result, 'Correct!');
+      var correctFlash = learnjs.buildCorrectFlash(number);
+      learnjs.flashElement(result, correctFlash);
     } else {
       learnjs.flashElement(result, 'Incorrect!');
     }
